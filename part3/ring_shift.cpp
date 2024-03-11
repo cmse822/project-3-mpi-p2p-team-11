@@ -2,8 +2,10 @@
 #include <mpi.h>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 void init_data(std::vector<uint8_t>& buff)
 {
@@ -11,6 +13,22 @@ void init_data(std::vector<uint8_t>& buff)
     for (size_t i = 0; i < buff.size(); i ++)
     {
         buff[i] = (rand() % 26) + 65;
+    }
+}
+
+void init_trials(std::vector<std::vector<uint8_t>>& sendBuffers, std::vector<std::vector<uint8_t>>& recvBuffers, size_t numTrials, size_t buffSize)
+{
+    sendBuffers.clear();
+    recvBuffers.clear();
+    for (size_t i = 0; i < numTrials; i++)
+    {
+        std::vector<uint8_t> sendBuffer;
+        std::vector<uint8_t> recvBuffer;
+        sendBuffer.resize(buffSize);
+        recvBuffer.resize(buffSize);
+        init_data(sendBuffer);
+        sendBuffers.push_back(sendBuffer);
+        recvBuffers.push_back(recvBuffer);
     }
 }
 
@@ -28,44 +46,67 @@ int main(int argc, char** argv)
     int shiftCount;
     if (myRank == 0)
     {
-        shiftCount = rand() % numRanks;
+        shiftCount = rand() % (numRanks - 1) + 1;
         std::cout << "Shift Count: " << shiftCount << std::endl;
     }
     MPI_Bcast(&shiftCount, 1, MPI_INT, 0, MPI_COMM_WORLD);
     
-    std::vector<uint8_t> sendBuffer;
-    std::vector<uint8_t> recvBuffer;
-
+    std::vector<std::vector<uint8_t>> sendBuffers;
+    std::vector<std::vector<uint8_t>> recvBuffers;
+    
     MPI_Datatype sendType = MPI_CHAR;
     MPI_Datatype recvType = MPI_CHAR;
     int dest = (myRank + shiftCount) % numRanks;
-    int source = (myRank - shiftCount) % numRanks;
+    int source = (myRank - shiftCount + numRanks) % numRanks;
+    
     MPI_Status status;
+    
+    std::vector<double> wTimes;
 
-    std::ostringstream out;
-    for (size_t i = 2; i <= 16; i *= 2) 
+    //std::ostringstream out;
+
+    double startTime, endTime;
+    const size_t numTrials = 100;
+    for (size_t i = 0; i < 12; i++) // Run trials with messages of size 2^(i+1)
     {
-        sendBuffer.resize(i);
-        recvBuffer.resize(i);
-        init_data(sendBuffer);
-        out << "Rank " << myRank << " before: ";
-        for (auto ch : sendBuffer)
+        init_trials(sendBuffers, recvBuffers, numTrials, round(pow(2, i + 1)));
+        MPI_Barrier(MPI_COMM_WORLD); // Ensure all process start at the same time for the shift
+        startTime = MPI_Wtime();
+        for (size_t j = 0; j < numTrials; j++) // Run 100 trials at each size
         {
-            out << ch;
+            //out << "Rank " << myRank << " before: ";
+            //for (auto ch : sendBuffers[i])
+            //{
+            //    out << ch;
+            //}
+            //out << std::endl;
+            //std::cout << out.str();
+            //out.str("");
+            MPI_Sendrecv(sendBuffers[j].data(), round(pow(2, i+1)), sendType, dest, 0, recvBuffers[j].data(), round(pow(2, i+1)), recvType, source, 0, MPI_COMM_WORLD, &status);
+            //out << "Rank " << myRank << " after: ";
+            //for (auto ch : recvBuffers[i])
+            //{
+            //    out << ch;
+            //}
+            //out << std::endl;
+            //std::cout << out.str();
+            //out.str("");
         }
-        out << std::endl;
-        std::cout << out.str();
-        out.str("");
-        MPI_Sendrecv(sendBuffer.data(), i, sendType, dest, 0, recvBuffer.data(), i, recvType, source, 0, MPI_COMM_WORLD, &status);
-        out << "Rank " << myRank << " after: ";
-        for (auto ch : recvBuffer)
-        {
-            out << ch;
-        }
-        out << std::endl;
-        std::cout << out.str();
-        out.str("");
+        MPI_Barrier(MPI_COMM_WORLD); // Used to ensure all processes have finished their shift
+        endTime = MPI_Wtime();
+        wTimes.push_back(endTime - startTime);
     }
-
+    
     MPI_Finalize();
+
+    if (myRank == 0)
+    {
+        std::ofstream fstream("Blocking_Ring_Shift_Wall_Times.txt", std::ios_base::app); // Append to file
+        for (size_t i = 0; i < wTimes.size(); i++)
+        {
+            // Format: Num Ranks    Message Size 2^N    Time (s)
+            fstream << numRanks << "\t" << i + 1 << "\t" << wTimes[i] << std::endl;
+        }
+        fstream.close();
+    }
 }
