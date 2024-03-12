@@ -1,7 +1,7 @@
 
 Part 1:
 
-Compiling: mpicc non_blocking_same_node.c -o non_blocking_same_node
+Compiling: mpicc blocking_same_node.c -o blocking_same_node
 
 Same-node job script: same_node_blocking.sb
 
