@@ -14,3 +14,11 @@ faster than blocking communication for both same-node utilization and different-
 for blocking and non-blocking graphs aren't clear since the discrepancy between in-node and different-node communication experiments
 is very large as discussed above. In figure_2, we exclude the results for the different node experiments to  show that non-blocking 
 communication time is faster than blocking communication time when run on the same node.
+
+
+____________________________________________________________________________________________________________________________________
+
+-> Remaining: compute bandwidth and latency for each of the 4 graphs using a best line fit (T(n) = a + Bn where a is the latency and B is the inverse of the
+bandwidth (communication time per byte) 
+
+{T(n) = average communication time of a single exchange in seconds for n bytes}
