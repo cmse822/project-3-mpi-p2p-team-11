@@ -1,13 +1,14 @@
 
 Part 1:
 
-Compiling: mpicc blocking_same_node.c -o blocking_same_node
+Compiling: mpicc blocking_ping_pong.c -o blocking_ping_pong
 
 Same-node job script: same_node_blocking.sb
 
 Different-node job script: different_node_blocking.sb
 
 ____________________________________________________________________________________________________________________________________
+
 Results for parts 1 and 2:
 
 -> We run our code on nodes in the amd22 cluster.
