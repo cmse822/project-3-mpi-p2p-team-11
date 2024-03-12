@@ -1,1 +1,16 @@
 
+-> We run our code on nodes in the amd22 cluster.
+
+-> The plot for (average communication time of a single exchange in seconds vs message size in bytes) is shown in figure_1.png for the 
+blocking and non-blocking ping-pong exchange utilizing both 1 node (both processes running on a single node) and 2 nodes 
+(each process running on a different node). 
+
+-> The message size was varied from 2^1 to  2^21 bytes (we run 100 iterations for each message size and compute the average time).
+
+-> In figure_1, we can that running each process on a different node dramatically increases the running time for an exchange as compared
+to running the two processes on the same node. This is because the local-area-network would be used for communication as opposed to shared
+memory communication mechanisms when running the two processes on the same node. We can also observe that non-blocking communication is 
+faster than blocking communication for both same-node utilization and different-node utilization. In figure_1, the communication time 
+for blocking and non-blocking graphs aren't clear since the discrepancy between in-node and different-node communication experiments
+is very large as discussed above. In figure_2, we exclude the results for the different node experiments to  show that non-blocking 
+communication time is faster than blocking communication time when run on the same node.
