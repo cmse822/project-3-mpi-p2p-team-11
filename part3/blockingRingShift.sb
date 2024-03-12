@@ -4,7 +4,7 @@
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=128
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=1G
+#SBATCH --mem-per-cpu=4G
 #SBATCH --job-name blockingRingShift
 
 cd $SLURM_SUBMIT_DIR
@@ -18,3 +18,4 @@ srun -n 32 ./ring_shift
 srun -n 64 ./ring_shift
 srun -n 128 ./ring_shift
 srun -n 256 ./ring_shift
+python plot_bandwidth.py
