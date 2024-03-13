@@ -3,7 +3,6 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 #include <sstream>
 #include <fstream>
 
@@ -42,12 +41,10 @@ int main(int argc, char** argv)
     MPI_Comm_size(MPI_COMM_WORLD, &numRanks);
     srand(time(NULL) + myRank);
     
-    std::cout << "NUMRANKS = " << numRanks << "; MYRANK = " << myRank << std::endl;
     int shiftCount;
     if (myRank == 0)
     {
         shiftCount = rand() % (numRanks - 1) + 1;
-        std::cout << "Shift Count: " << shiftCount << std::endl;
     }
     MPI_Bcast(&shiftCount, 1, MPI_INT, 0, MPI_COMM_WORLD);
     
@@ -63,8 +60,6 @@ int main(int argc, char** argv)
     
     std::vector<double> wTimes;
 
-    //std::ostringstream out;
-
     double startTime, endTime;
     const size_t numTrials = 100;
     for (size_t i = 0; i < 20; i++) // Run trials with messages of size 2^(i+1)
@@ -74,25 +69,9 @@ int main(int argc, char** argv)
         startTime = MPI_Wtime();
         for (size_t j = 0; j < numTrials; j++) // Run 100 trials at each size
         {
-            //out << "Rank " << myRank << " before: ";
-            //for (auto ch : sendBuffers[i])
-            //{
-            //    out << ch;
-            //}
-            //out << std::endl;
-            //std::cout << out.str();
-            //out.str("");
             MPI_Sendrecv(sendBuffers[j].data(), round(pow(2, i+1)), sendType, dest, 0, recvBuffers[j].data(), round(pow(2, i+1)), recvType, source, 0, MPI_COMM_WORLD, &status);
-            //out << "Rank " << myRank << " after: ";
-            //for (auto ch : recvBuffers[i])
-            //{
-            //    out << ch;
-            //}
-            //out << std::endl;
-            //std::cout << out.str();
-            //out.str("");
+            MPI_Barrier(MPI_COMM_WORLD); // Used to ensure all processes have finished their shift
         }
-        MPI_Barrier(MPI_COMM_WORLD); // Used to ensure all processes have finished their shift
         endTime = MPI_Wtime();
         wTimes.push_back(endTime - startTime);
     }

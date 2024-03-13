@@ -1,2 +1,3 @@
-part3/ring_shift
+part3/blocking_ring_shift
+part4/non_blocking_ring_shift
 **/slurm*

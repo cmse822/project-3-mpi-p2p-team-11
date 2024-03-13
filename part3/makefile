@@ -1,2 +1,2 @@
 main:
-	mpicxx \-o ring_shift ring_shift.cpp
+	mpicxx \-o blocking_ring_shift blocking_ring_shift.cpp

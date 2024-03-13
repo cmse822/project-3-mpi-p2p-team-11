@@ -10,12 +10,12 @@
 cd $SLURM_SUBMIT_DIR
 rm Blocking_Ring_Shift_Wall_Times.txt
 sh ./blocking_ring_shift_write_headers.sh
-srun -n 2 ./ring_shift
-srun -n 4 ./ring_shift
-srun -n 8 ./ring_shift
-srun -n 16 ./ring_shift
-srun -n 32 ./ring_shift
-srun -n 64 ./ring_shift
-srun -n 128 ./ring_shift
-srun -n 256 ./ring_shift
+srun -n 2 ./blocking_ring_shift
+srun -n 4 ./blocking_ring_shift
+srun -n 8 ./blocking_ring_shift
+srun -n 16 ./blocking_ring_shift
+srun -n 32 ./blocking_ring_shift
+srun -n 64 ./blocking_ring_shift
+srun -n 128 ./blocking_ring_shift
+srun -n 256 ./blocking_ring_shift
 python plot_bandwidth.py
