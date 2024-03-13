@@ -15,20 +15,21 @@ double nonblocking_ping_pong(int rank, int nTrials, char* buffer, int buffSize )
             MPI_Request reqst[2];
             // communicating rank 0 to rank 1
             MPI_Isend(buffer, buffSize, MPI_CHAR, 1, 0, MPI_COMM_WORLD, &reqst[0]); 
-            MPI_Irecv(&recvBuff, buffSize, MPI_CHAR, 1, 0, MPI_COMM_WORLD, &reqst[1]);
+            MPI_Irecv(&recvBuff, buffSize, MPI_CHAR, 1, 1, MPI_COMM_WORLD, &reqst[1]);
             MPI_Waitall(2, reqst, MPI_STATUS_IGNORE); 
         }
         else {
             MPI_Request reqst[2];
             // communicating rank 1 to 0
             MPI_Irecv(&recvBuff, buffSize, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &reqst[0]);
-            MPI_Isend(buffer, buffSize, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &reqst[1]);
+            MPI_Isend(buffer, buffSize, MPI_CHAR, 0, 1, MPI_COMM_WORLD, &reqst[1]);
             MPI_Waitall(2, reqst, MPI_STATUS_IGNORE); 
         }
     }
 
     end = MPI_Wtime();
 
+<<<<<<< HEAD
     return (end - start);
 }
 
@@ -51,4 +52,7 @@ int main(int argc, char *argv[]) {
     MPI_Finalize(); 
     
     return 0; 
+=======
+    return end - start;
+>>>>>>> 70f1ef15d0ef5126f55c93983b1e5e6d584f5ef2
 }

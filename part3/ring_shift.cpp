@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 
     double startTime, endTime;
     const size_t numTrials = 100;
-    for (size_t i = 0; i < 12; i++) // Run trials with messages of size 2^(i+1)
+    for (size_t i = 0; i < 20; i++) // Run trials with messages of size 2^(i+1)
     {
         init_trials(sendBuffers, recvBuffers, numTrials, round(pow(2, i + 1)));
         MPI_Barrier(MPI_COMM_WORLD); // Ensure all process start at the same time for the shift
