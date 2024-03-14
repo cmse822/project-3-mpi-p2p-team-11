@@ -1,0 +1,81 @@
+
+Part 1 Code:
+
+Compiling: mpicc blocking_ping_pong.c -o blocking_ping_pong
+
+Same-node job script: same_node_blocking.sb
+
+Different-node job script: different_node_blocking.sb
+____________________________________________________________________________________________________________________________________
+
+Part 2 Code:
+
+Details found in the part2 directory.
+____________________________________________________________________________________________________________________________________
+
+Parts 1 and 2 Analysis:
+
+-> We run our code on nodes in the amd20 cluster.
+
+-> The communication time corresponds to the round-trip time of the exchange (time for a ping-pong exchange).
+
+-> The message size was varied from 2^1 to  2^21 bytes (we run 100 iterations for each message size and compute the average time).
+
+-> The plot (average communication time of a single exchange in seconds vs message size in bytes) for blocking and non-blocking ping-pong 
+exchange utilizing both 1 node (both processes running on a single node) and 2 nodes (each process running on a different node) is shown in
+in parts_1_and_2_plot1.png figure_1.
+
+-> In parts_1_and_2_plot1.png figure_1, we can that running each process on a different node dramatically increases the running time for an
+exchange as compared to running the two processes on the same node. This is because the local-area-network would be used for 
+communication as opposed to shared memory communication mechanisms when running the two processes on the same node. 
+
+-> We can also observe that non-blocking communication is faster than blocking communication for both same-node utilization and
+different-node utilization. In figure_1, the communication time for blocking and non-blocking graphs aren't clear since the discrepancy 
+between in-node and different-node communication experiments is very large as discussed above. In figure_2, we exclude the results
+for the different node experiments to  show that non-blocking communication time is faster than blocking communication time when 
+run on the same node as well.
+
+Bandwidth Analysis:
+-> For each of the 4 graphs in parts_2_and_3_plot1.png figure_1, we calculate the best-line fit to compute the bandwidth and 
+latency where the bandwidth is the inverse of the slope and the latency is the y-intercept. We use the x values of message sizes 
+from 2^1 bytes to 2^21 bytes. The graphs are shown in parts_2_and_3_plot2.png.
+
+-> Both the bandwidths for the blocking and non-blocking communication on different-nodes are lower than both the bandwidths 
+for the blocking and non-blocking communication on the same-node. This aligns with our analysis above. 
+
+-> The bandwidth for same-node blocking communication is lower than the bandwidth for non-blocking same-node communication which 
+aligns with our analysis above.
+
+-> The bandwidth for different-node blocking communication is lower than the bandwidth for non-blocking different-node communication 
+which aligns with our analysis above.
+
+-> The Steeper the slopes are for the best-line fits the higher the bandwidth is since bandwidth is the inverse of the slope.
+
+
+Latency Analysis:
+
+-> Fitting best-lines on all the 4 curves returns negative y-intercepts as shown in parts_2_and_3_plot2.png. For this reason,
+we only consider the first 10 message sizes to fit a best-line for the purpose of getting the latency/y-intercept. 
+All 4 latencies returned were positive. Using 2^1 to 2^10 bytes as message size make sense when computing the latency since 
+small message sizes are needed to compute network latency. The graphs are shown in parts_2_and_3_plot3.png. 
+
+-> The latency for both blocking and non-blocking different node communication is higher than the latency for both blocking and
+non-blocking same node communication. This can be observed in the graphs where small message sizes for same node communication take 
+less time than small message sizes for different node communications. 
+
+-> The latency for same node blocking communication is lower than the latency for non-blocking same node communication which can be observed
+in our graphs.
+
+-> The latency for different node blocking communication is lower than the latency for non-blocking different node communication which
+can be observed in our graphs.
+
+Note: We compute a best line fit where (T(n) = a + Bn ; a is the latency and B is the inverse of the
+bandwidth (communication time in s per byte) 
+
+____________________________________________________________________________________________________________________________________
+
+Parts 3 and 4:
+
+-> remaining: plots blocking and non - blocking ; computing bandwidth and latency ; analysis
+
+
