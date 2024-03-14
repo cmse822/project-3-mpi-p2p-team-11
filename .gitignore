@@ -1,3 +1,4 @@
+part2/nonblocking_ping_pong
 part3/blocking_ring_shift
 part4/non_blocking_ring_shift
 **/slurm*

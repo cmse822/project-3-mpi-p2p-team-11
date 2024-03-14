@@ -18,4 +18,3 @@ srun -n 32 ./blocking_ring_shift
 srun -n 64 ./blocking_ring_shift
 srun -n 128 ./blocking_ring_shift
 srun -n 256 ./blocking_ring_shift
-python plot_bandwidth.py
