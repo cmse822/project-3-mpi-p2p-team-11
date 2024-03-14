@@ -51,6 +51,8 @@ which aligns with our analysis above.
 
 -> The Steeper the slopes are for the best-line fits the higher the bandwidth is since bandwidth is the inverse of the slope.
 
+Note: We compute a best line fit where (T(n) = a + Bn ; a is the latency and B is the inverse of the
+bandwidth (communication time in s per byte) 
 
 Latency Analysis:
 
@@ -69,8 +71,6 @@ in our graphs.
 -> The latency for different node blocking communication is lower than the latency for non-blocking different node communication which
 can be observed in our graphs.
 
-Note: We compute a best line fit where (T(n) = a + Bn ; a is the latency and B is the inverse of the
-bandwidth (communication time in s per byte) 
 
 ____________________________________________________________________________________________________________________________________
 
