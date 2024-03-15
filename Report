@@ -74,8 +74,23 @@ can be observed in our graphs.
 
 ____________________________________________________________________________________________________________________________________
 
-Parts 3 and 4:
+Parts 3 and 4 Code:
 
--> remaining: plots blocking and non - blocking ; computing bandwidth and latency ; analysis
+Details found in the part3 and part4 directories. 
+
+____________________________________________________________________________________________________________________________________
+
+Parts 3 and 4 Analysis:
 
 
+-> The message size was varied from 2^1 to  2^21 bytes (we run 100 iterations for each message size and compute the average time).
+
+-> There doesn't appear to be significant difference in communication time for the blocking and non-blocking cases. This is maybe
+due to sendrecv being very optimized by mpi so that implementing our own non-blocking communication using isend and irecv doesn't offer
+performance improvements like what we saw in parts 1 and 2. That being said, the sendrecv blocking communication seems to be slightly 
+quicker for all varied ranks and message sizes which is the case for most processor counts. Moreover, we observe that the higher the processor count, the higher is the
+communication time. Last but not least, there's a sharp increase in the rate of change (time in s)/bytes at message size 2^15 for both blocking and non-blocking communication.
+The sharp increase in the rate of change is followed by a consistent steep slope. This means that the bandwidth at message 2^15 decreases sharply and then becomes stable/consts 
+afterwards.
+
+-> Remaining to do tomorrow morning: plot bandwidths and latencies + analysis
