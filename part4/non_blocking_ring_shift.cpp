@@ -12,6 +12,7 @@ void init_data(std::vector<uint8_t>& buff)
     std::fill(buff.begin(), buff.end(), 0);
     for (size_t i = 0; i < buff.size(); i ++)
     {
+        // Fill buffer with random characters
         buff[i] = (rand() % 26) + 65;
     }
 }
@@ -20,6 +21,7 @@ void init_trials(std::vector<std::vector<uint8_t>>& sendBuffers, std::vector<std
 {
     sendBuffers.clear();
     recvBuffers.clear();
+    // Populate buffers for all trials
     for (size_t i = 0; i < numTrials; i++)
     {
         std::vector<uint8_t> sendBuffer;
@@ -41,7 +43,9 @@ int main(int argc, char** argv)
     int numRanks;
     MPI_Comm_size(MPI_COMM_WORLD, &numRanks);
     srand(time(NULL) + myRank);
-    
+
+    // Determine the distance of the ring shift
+    // Uses only one sendrecv regardless of distance    
     int shiftCount;
     if (myRank == 0)
     {
