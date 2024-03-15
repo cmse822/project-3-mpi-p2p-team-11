@@ -82,6 +82,7 @@ ________________________________________________________________________________
 
 Parts 3 and 4 Analysis:
 
+-> We run our code on nodes in the amd20 cluster.
 
 -> The message size was varied from 2^1 to  2^21 bytes (we run 100 iterations for each message size and compute the average time).
 
