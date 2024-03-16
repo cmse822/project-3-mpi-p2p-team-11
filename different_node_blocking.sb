@@ -10,4 +10,4 @@
 
 ########## Command Lines to Run ##########
 
-mpiexec -np 2 blocking_ping_pong.sb
+mpiexec -np 2 blocking_ping_pong
