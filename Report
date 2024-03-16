@@ -1,16 +1,30 @@
 
 Part 1 Code:
 
-Compiling: mpicc blocking_ping_pong.c -o blocking_ping_pong
+Code: blocking_ping_pong.c 
 
-Same-node job script: same_node_blocking.sb
+Compilation: mpicc blocking_ping_pong.c -o blocking_ping_pong
+
+Same-node job script: same_node_blocking.sb 
 
 Different-node job script: different_node_blocking.sb
 ____________________________________________________________________________________________________________________________________
 
 Part 2 Code:
 
-Details found in the part2 directory.
+Code: found in the part2 directory.
+
+Compilation: mpicxx -o nonblocking_ping_pong nonblocking_ping_pong.cpp
+
+Same-node job script and Different-node job scripts are the same as part 1 but with running the nonblocking executable.
+
+nonblocking_ping_pong_time.pdf shows the communication time for non-blocking ping-pong on message size 2^1 to 2^16 and 
+it was run on the amd20 developement node using 2 processes. 
+
+In the next part, we run non-blocking ping-pong on same node and on 2 different nodes with message size 2^1 to 2^32 and compare it to the 
+blocking ping-pong. We don't use the developement nodes in the next part but we request cluster resources using the 2 job scripts 
+(same_node_blocking.sb and different_node_blocking.sb). 
+
 ____________________________________________________________________________________________________________________________________
 
 Parts 1 and 2 Analysis:
@@ -35,7 +49,7 @@ between in-node and different-node communication experiments is very large as di
 for the different node experiments to  show that non-blocking communication time is faster than blocking communication time when 
 run on the same node as well.
 
-Bandwidth Analysis:
+Bandwidth Analysis: (We didn't use GiB/s ; used GB/s base 10)
 -> For each of the 4 graphs in parts_2_and_3_plot1.png figure_1, we calculate the best-line fit to compute the bandwidth and 
 latency where the bandwidth is the inverse of the slope and the latency is the y-intercept. We use the x values of message sizes 
 from 2^1 bytes to 2^21 bytes. The graphs are shown in parts_2_and_3_plot2.png.
