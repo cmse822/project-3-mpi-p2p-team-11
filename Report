@@ -71,8 +71,8 @@ bandwidth (communication time in s per byte)
 Latency Analysis:
 
 -> Fitting best-lines on all the 4 curves returns negative y-intercepts as shown in parts_2_and_3_plot2.png. For this reason,
-we only consider the first 10 message sizes to fit a best-line for the purpose of getting the latency/y-intercept. 
-All 4 latencies returned were positive. Using 2^1 to 2^10 bytes as message size make sense when computing the latency since 
+we only consider the first 8 message sizes to fit a best-line for the purpose of getting the latency/y-intercept. 
+All 4 latencies returned were positive. Using 2^1 to 2^8 bytes as message size make sense when computing the latency since 
 small message sizes are needed to compute network latency. The graphs are shown in parts_2_and_3_plot3.png. 
 
 -> The latency for both blocking and non-blocking different node communication is higher than the latency for both blocking and
@@ -109,6 +109,8 @@ communication time. There is a sharp increase in the rate of change (time in s)/
 non-blocking communication. The sharp increase in the rate of change is followed by a consistent steep slope. This means that the bandwidth
 at message 2^15 decreases sharply and then becomes stable/constant afterwards. The communication time rate of increase is the highest at
 processor count 128 since more than 1 node will be utilized now (max number of cores is 128 per a single node). 
+
+
 
 -> We tried testing the isendrecv mpi function instead of isend/irecv functions but it is only supported in the openmpi 5.0 version which
 implements the MPI 4.0 standard. The openmpi 5.0 version isn't installed on the hpcc so we installed it locally on our hpcc account. When 
