@@ -100,12 +100,23 @@ Parts 3 and 4 Analysis:
 
 -> The message size was varied from 2^1 to  2^21 bytes (we run 100 iterations for each message size and compute the average time).
 
--> There doesn't appear to be significant difference in communication time for the blocking and non-blocking cases. This is maybe
-due to sendrecv being very optimized by mpi so that implementing our own non-blocking communication using isend and irecv doesn't offer
-performance improvements like what we saw in parts 1 and 2. That being said, the sendrecv blocking communication seems to be slightly 
-quicker for all varied ranks and message sizes which is the case for most processor counts. Moreover, we observe that the higher the processor count, the higher is the
-communication time. Last but not least, there's a sharp increase in the rate of change (time in s)/bytes at message size 2^15 for both blocking and non-blocking communication.
-The sharp increase in the rate of change is followed by a consistent steep slope. This means that the bandwidth at message 2^15 decreases sharply and then becomes stable/consts 
-afterwards.
+-> There doesn't appear to be significant difference in communication time between the blocking and the non-blocking case. We expected
+the non-blocking isend and recv to achieve better performance but this wasn't the case. This is maybe due to sendrecv being very optimized
+by mpi so that implementing our own non-blocking communication using isend and irecv doesn't offer performance improvements like what we
+observed in parts 1 and 2. That being said, the sendrecv blocking communication seems to be slightly  quicker for all varied ranks and
+message sizes which is the case for most processor counts. Moreover, we observe that the higher the  processor count, the higher is the 
+communication time. There is a sharp increase in the rate of change (time in s)/bytes  at message size 2^15 for both blocking and 
+non-blocking communication. The sharp increase in the rate of change is followed by a consistent steep slope. This means that the bandwidth
+at message 2^15 decreases sharply and then becomes stable/constant afterwards. The communication time rate of increase is the highest at
+processor count 128 since more than 1 node will be utilized now (max number of cores is 128 per a single node). 
 
--> Remaining to do tomorrow morning: plot bandwidths and latencies + analysis
+-> We tried testing the isendrecv mpi function instead of isend/irecv functions but it is only supported in the openmpi 5.0 version which
+implements the MPI 4.0 standard. The openmpi 5.0 version isn't installed on the hpcc so we installed it locally on our hpcc account. When 
+running the code, it was running fine but it was returning a warning that the network communication isn't able to use the Infiniband 
+interface so it probably downgraded to the Ethernet interface since it was still being able to communicate across nodes. We ran the sendrecv
+code again but using openmpi 5.0 (Ethernet interface) and compared it with isendrecv which was also ran using openmpi 5.0 (Ethernet interface).
+We also didn't notice any significant differences between communication times except for large processor counts such as 128 processors.
+The communication time results for isendrecv were 2.08197, 2.20092, 1.42546, 1.67711, 2.22386, 1.98281, 1.7421, 0.93896, 1.108, 1.79003, and
+2.70619 for message sizes 2^10 to 2^20. The communication time resutls for sendrecv however were 1.86971, 2.23217, 2.04483, 1.99266, 1.52353, 
+2.05799, 1.93897, 1.98355, 2.67182, 2.47717, and 3.49694 for message sizes 2^10 to 2^20. 
+
