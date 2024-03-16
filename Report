@@ -103,24 +103,27 @@ Parts 3 and 4 Analysis:
 -> parts_3_and_4_plot1.png shows the blocking and non-blocking communication time v. message size for the ring shift problem. 
 
 -> There doesn't appear to be significant difference in communication time between the blocking and the non-blocking case as show in
-in parts_3_and_4_plot1.png. We expected the non-blocking isend and recv to achieve better performance but this wasn't the case. This is maybe due to sendrecv 
-being very optimized by mpi so that implementing our own non-blocking communication using isend and irecv doesn't offer performance improvements like what we
-observed in parts 1 and 2. Overall, the sendrecv blocking communication seems to be slightly  quicker for all varied ranks and message sizes. We observe that the higher the 
-processor count, the higher is the communication time. There is a sharp increase in the rate of change (time in s)/bytes  at message size 2^15 for both blocking and 
-non-blocking communication. The sharp increase in the rate of change is followed by a constant steep slope. This means that the bandwidth at message 2^15 
-decreases sharply and then becomes stable/constant afterwards. The communication time rate of increase is the highest at processor count 128 since more than
-1 node will be utilized now (max number of cores is 128 per single node). 
+in parts_3_and_4_plot1.png. We expected the non-blocking isend and recv to achieve better performance but this wasn't the case. This is 
+maybe due to sendrecv being very optimized by mpi so that implementing our own non-blocking communication using isend and irecv doesn't
+offer performance improvements like what we observed in parts 1 and 2. Overall, the sendrecv blocking communication seems to be slightly 
+quicker for all varied ranks and message sizes. We observe that the higher the processor count, the higher is the communication time.
+There is a sharp increase in the rate of change (time in s)/bytes  at message size 2^15 for both blocking and non-blocking communication
+for all varied ranks. The sharp increase in the rate of change is followed by a constant steep slope. This means that the bandwidth at 
+message 2^15 decreases sharply and then becomes stable/constant afterwards. The communication time rate of increase is the highest at
+processor count 128 since more than 1 node will be utilized after that point (max number of cores is 128 per single node). 
 
--> Similar to parts 1 and 2, we compute the bandwidth by fitting a line on each of the curves as shown in parts_3_and_4_plot2.png for the blocking ring shift. Similar to parts 1 and 2,
-the latencies returned were negative so we compute the best-line fits for message sizes 2^1 to 2^8 to calculate the latency as shown in parts_3_and_4_plot3.png
+-> Similar to parts 1 and 2, we compute the bandwidth by fitting a line on each of the curves as shown in parts_3_and_4_plot2.png for the 
+blocking ring shift. Similar to parts 1 and 2, the latencies returned were negative so we compute the best-line fits for message sizes 2^1 
+to 2^8 to calculate the latency as shown in parts_3_and_4_plot3.png
 
--> parts_3_and_4_plot4.png and parts_3_and_4_plot5.png are the best-line fits for computing the bandwidths and latencies respectively for non-blocking ring-shift. 
+-> parts_3_and_4_plot4.png and parts_3_and_4_plot5.png are the best-line fits for computing the bandwidths and latencies respectively
+for the non-blocking ring-shift. 
 
--> For both the blocking and non-blocking cases, bandwidth seems to consistently decrease as we increase the number of ranks. The bandwidth for the non-blocking case seems to also
-be consistently lower than the bandwidth for the blocking case. 
+-> For both the blocking and non-blocking cases, bandwidth seems to consistently decrease as we increase the number of ranks. 
+Also, the bandwidth for the non-blocking case seems to be on average slightly lower than the bandwidth for the blocking case. 
 
--> For both the blocking and non-blocking cases, latency increases as we increase the number of ranks. Moreover, it seems like the latency is consistently higher for the non-blocking
-case when compared with the blocking case. 
+-> For both the blocking and non-blocking cases, latency increases as we increase the number of ranks. Moreover, it seems like the 
+latency is on average higher for the non-blocking case when compared with the blocking case. 
 
 
 
@@ -128,10 +131,11 @@ case when compared with the blocking case.
 implements the MPI 4.0 standard. The openmpi 5.0 version isn't installed on hpcc by default so we installed it locally on our hpcc account. When 
 running the code, it was running fine but it was issuing a warning that says that the network communication isn't able to use the Infiniband 
 interface so it probably downgraded to the Ethernet interface since it was still being able to communicate across nodes. We ran the sendrecv
-code again but using openmpi 5.0 (we also specified Ethernet interface when running mpi) and compared it with isendrecv which was also ran using openmpi 5.0 (Ethernet interface).
-We also didn't notice any significant differences between communication times except for large processor counts such as 128 processors.
-The communication time results for isendrecv were 2.08197, 2.20092, 1.42546, 1.67711, 2.22386, 1.98281, 1.7421, 0.93896, 1.108, 1.79003, and
-2.70619 for message sizes 2^10 to 2^20. The communication time resutls for sendrecv however were 1.86971, 2.23217, 2.04483, 1.99266, 1.52353, 
-2.05799, 1.93897, 1.98355, 2.67182, 2.47717, and 3.49694 for message sizes 2^10 to 2^20. So, isendrecv performs better than sendrecv for 
-processor counts>=128 otherwise there's no noticeable difference. 
+code again but using openmpi 5.0 (we also specified Ethernet interface when running mpi using the command-line option --mca btl tcp,self) 
+and compared it with isendrecv which was also ran using openmpi 5.0 (Ethernet interface). We also didn't notice any significant differences
+between communication times except for large processor counts such as 128 processors. The communication time results for isendrecv when
+utilizing 128 cores were 2.08197, 2.20092, 1.42546, 1.67711, 2.22386, 1.98281, 1.7421, 0.93896, 1.108, 1.79003, and 2.70619 for 
+message sizes 2^10 to 2^20. The communication time resutls for sendrecv when utilizing 128 cores however were 1.86971, 2.23217, 2.04483,
+1.99266, 1.52353, 2.05799, 1.93897, 1.98355, 2.67182, 2.47717, and 3.49694 for message sizes 2^10 to 2^20. So, isendrecv performs
+better than sendrecv for processor counts>=128 otherwise there's no noticeable difference. 
 
