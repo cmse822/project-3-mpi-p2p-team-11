@@ -112,9 +112,9 @@ decreases sharply and then becomes stable/constant afterwards. The communication
 1 node will be utilized now (max number of cores is 128 per single node). 
 
 -> Similar to parts 1 and 2, we compute the bandwidth by fitting a line on each of the curves as shown in parts_3_and_4_plot2.png for the blocking ring shift. Similar to parts 1 and 2,
-the latencies returned were negative so we compute the best-line fits for message sizes 2^1 to 2^8 to calculate the latency.
+the latencies returned were negative so we compute the best-line fits for message sizes 2^1 to 2^8 to calculate the latency as shown in parts_3_and_4_plot3.png
 
--> parts_3_and_4_plot3.png and parts_3_and_4_plot4.png are the best-line fits for computing the bandwidths and latencies respectively. 
+-> parts_3_and_4_plot4.png and parts_3_and_4_plot5.png are the best-line fits for computing the bandwidths and latencies respectively for non-blocking ring-shift. 
 
 -> For both the blocking and non-blocking cases, bandwidth seems to consistently decrease as we increase the number of ranks. The bandwidth for the non-blocking case seems to also
 be consistently lower than the bandwidth for the blocking case. 
