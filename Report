@@ -1,0 +1,141 @@
+
+Part 1 Code:
+
+Code: blocking_ping_pong.c 
+
+Compilation: mpicc blocking_ping_pong.c -o blocking_ping_pong
+
+Same-node job script: same_node_blocking.sb 
+
+Different-node job script: different_node_blocking.sb
+____________________________________________________________________________________________________________________________________
+
+Part 2 Code:
+
+Code: found in the part2 directory.
+
+Compilation: mpicxx -o nonblocking_ping_pong nonblocking_ping_pong.cpp
+
+Same-node and Different-node job scripts are identical to the scripts in part 1 but with running the nonblocking_ping_pong executable rather than the blocking_ping_pong executable.
+
+nonblocking_ping_pong_time.pdf shows the average communication time for non-blocking ping-pong on message size 2^1 to 2^16 and 
+it was run on the amd20 developement node using 2 processes. 
+
+In the next part, we run non-blocking ping-pong on the same node and on 2 different nodes with message size 2^1 to 2^21 and we compare it to the 
+blocking ping-pong that is run in the same fashion. We don't use the developement nodes in the next part but rather request cluster resources using the 2 job scripts 
+(same_node_blocking.sb and different_node_blocking.sb). 
+
+____________________________________________________________________________________________________________________________________
+
+Parts 1 and 2 Analysis:
+
+-> We run our code on nodes in the amd20 cluster.
+
+-> The communication time corresponds to the round-trip time of the exchange (time for a ping-pong exchange).
+
+-> The message size was varied from 2^1 to  2^21 bytes (we run 100 iterations for each message size and compute the average time).
+
+-> The plot (average communication time of a single exchange in seconds vs message size in bytes) for blocking and non-blocking ping-pong 
+exchange utilizing both 1 node (both processes running on a single node) and 2 nodes (each process running on a different node) is shown in
+in parts_1_and_2_plot1.png figure_1.
+
+-> In parts_1_and_2_plot1.png figure_1, we can observe that running each process on a different node dramatically increases the running time for an
+exchange as compared to running the two processes on the same node. This is because the local-area-network would be used for 
+communication as opposed to shared memory communication mechanisms when running the two processes on the same node. 
+
+-> We can also observe that non-blocking communication is faster than blocking communication for both same-node utilization and
+different-node utilization. In figure_1, the communication time for blocking and non-blocking graphs aren't clear since the discrepancy 
+between in-node and different-node communication experiments is very large as discussed above. In figure_2, we exclude the results
+for the different-node experiments to  show that non-blocking communication time is faster than blocking communication time when 
+run on the same node as well.
+
+Bandwidth Analysis: (We didn't use GiB/s ; we used GB/s base 10)
+-> For each of the 4 graphs in parts_1_and_2_plot1.png figure_1, we calculate the best-line fit to compute the bandwidth and 
+latency where the bandwidth is the inverse of the slope and the latency is the y-intercept. We use the x values of message sizes 
+from 2^1 bytes to 2^21 bytes. The graphs are shown in parts_1_and_2_plot2.png.
+
+-> Both the bandwidths for the blocking and non-blocking communication on different-nodes are lower than both the bandwidths 
+for the blocking and non-blocking communication on the same-node. This aligns with our analysis above. 
+
+-> The bandwidth for same-node blocking communication is lower than the bandwidth for non-blocking same-node communication which 
+aligns with our analysis above.
+
+-> The bandwidth for different-node blocking communication is lower than the bandwidth for non-blocking different-node communication 
+which aligns with our analysis above.
+
+-> The steeper the slopes are for the best-line fits the lower the bandwidth is since bandwidth is the inverse of the slope.
+
+Note: We compute a best line fit where (T(n) = a + Bn ; a is the latency and B is the inverse of the
+bandwidth (B in units of communication time in s per byte) 
+
+Latency Analysis:
+
+-> Fitting best-lines on all the 4 curves returns negative y-intercepts as shown in parts_1_and_2_plot2.png. For this reason,
+we only consider the first 8 message sizes to fit a best-line for the purpose of getting the latency/y-intercept. 
+All 4 latencies returned were positive. Using 2^1 to 2^8 bytes as message size make sense when computing the latency since 
+small message sizes are needed to compute network latency. The graphs are shown in parts_1_and_2_plot3.png. 
+
+-> The latency for both blocking and non-blocking different node communication is higher than the latency for both blocking and
+non-blocking same node communication. This can be observed in the graphs where small message sizes for same node communication take 
+less time than small message sizes for different node communications. This aligns with our analysis above.
+
+-> The latency for same-node non-blocking communication is lower than the latency for blocking same-node communication which can be observed
+in our graphs. This aligns with our analysis above.
+
+-> The latency for different-node non-blocking communication is lower than the latency for blocking different-node communication which
+can be observed in our graphs. This aligns with our analysis above.
+
+
+____________________________________________________________________________________________________________________________________
+
+Parts 3 and 4 Code:
+
+Details found in the part3 and part4 directories. 
+
+____________________________________________________________________________________________________________________________________
+
+Parts 3 and 4 Analysis:
+
+-> We run our code on nodes in the amd20 cluster.
+
+-> The message size was varied from 2^1 to  2^20 bytes (we run 100 iterations for each message size and compute the average time).
+
+-> parts_3_and_4_plot1.png shows the blocking and non-blocking communication time v. message size for the ring shift problem. 
+
+-> There doesn't appear to be significant difference in communication time between the blocking and the non-blocking case as show in
+in parts_3_and_4_plot1.png. We expected the non-blocking isend and recv to achieve better performance but this wasn't the case. This is 
+maybe due to sendrecv being very optimized by mpi so that implementing our own non-blocking communication using isend and irecv doesn't
+offer performance improvements like what we observed in parts 1 and 2. Overall, the sendrecv blocking communication seems to be slightly 
+quicker for all varied ranks and message sizes. We observe that the higher the processor count, the higher is the communication time.
+There is a sharp increase in the rate of change (time in s)/bytes  at message size 2^15 for both blocking and non-blocking communication
+for all varied ranks. The sharp increase in the rate of change is followed by a constant steep slope. This means that the bandwidth at 
+message 2^15 decreases sharply and then becomes stable/constant afterwards. The communication time rate of increase is the highest at
+processor count 128 since more than 1 node will be utilized after that point (max number of cores is 128 per single node). 
+
+-> Similar to parts 1 and 2, we compute the bandwidth by fitting a line on each of the curves as shown in parts_3_and_4_plot2.png for the 
+blocking ring shift. Similar to parts 1 and 2, the latencies returned were negative so we compute the best-line fits for message sizes 2^1 
+to 2^8 to calculate the latency as shown in parts_3_and_4_plot3.png
+
+-> parts_3_and_4_plot4.png and parts_3_and_4_plot5.png are the best-line fits for computing the bandwidths and latencies respectively
+for the non-blocking ring-shift. 
+
+-> For both the blocking and non-blocking cases, bandwidth seems to consistently decrease as we increase the number of ranks. 
+Also, the bandwidth for the non-blocking case seems to be on average slightly lower than the bandwidth for the blocking case. 
+
+-> For both the blocking and non-blocking cases, latency increases as we increase the number of ranks. Moreover, it seems like the 
+latency is on average higher for the non-blocking case when compared with the blocking case. 
+
+
+
+-> We tried testing the isendrecv mpi function instead of isend/irecv functions but it is only supported in the openmpi 5.0 version which
+implements the MPI 4.0 standard. The openmpi 5.0 version isn't installed on hpcc by default so we installed it locally on our hpcc account. When 
+running the code, it was running fine but it was issuing a warning that says that the network communication isn't able to use the Infiniband 
+interface so it probably downgraded to the Ethernet interface since it was still being able to communicate across nodes. We ran the sendrecv
+code again but using openmpi 5.0 (we also specified Ethernet interface when running mpi using the command-line option --mca btl tcp,self) 
+and compared it with isendrecv which was also ran using openmpi 5.0 (Ethernet interface). We also didn't notice any significant differences
+between communication times except for large processor counts such as 128 processors. The communication time results for isendrecv when
+utilizing 128 cores were 2.08197, 2.20092, 1.42546, 1.67711, 2.22386, 1.98281, 1.7421, 0.93896, 1.108, 1.79003, and 2.70619 for 
+message sizes 2^10 to 2^20. The communication time resutls for sendrecv when utilizing 128 cores however were 1.86971, 2.23217, 2.04483,
+1.99266, 1.52353, 2.05799, 1.93897, 1.98355, 2.67182, 2.47717, and 3.49694 for message sizes 2^10 to 2^20. So, isendrecv performs
+better than sendrecv for processor counts>=128 otherwise there's no noticeable difference. 
+
